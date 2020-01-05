@@ -1,6 +1,7 @@
 locals {
   git_clone_trigger = uuid()
   file_source_keys  = keys(var.paths)
+  content_hash      = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   repository_remote = format("git@%s:%s/%s.git", var.git_base_url, var.git_organization, var.git_repository)
   repository_dir    = format("%s/repository", path.module)
 }
@@ -46,7 +47,7 @@ resource "null_resource" "commits" {
   }
 
   triggers = {
-    content_hash = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
+    content_hash = local.content_hash
   }
 }
 
