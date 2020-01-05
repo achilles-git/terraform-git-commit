@@ -1,6 +1,6 @@
 locals {
-  git_clone_trigger  = uuid()
   file_source_keys   = keys(var.paths)
+  git_clone_trigger  = var.changes ? uuid() : 1
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? abspath(path.module) : var.templates_root_dir
   repository_remote  = format("git@%s:%s/%s.git", var.git_base_url, var.git_organization, var.git_repository)
@@ -71,4 +71,3 @@ resource "null_resource" "cleanup" {
     hash = local.git_clone_trigger
   }
 }
-
