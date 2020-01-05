@@ -1,3 +1,8 @@
 output "content_hash" {
   value = local.content_hash
 }
+
+output "done_trigger" {
+  value       = null_resource.cleanup.triggers.git_clone_trigger
+  description = "As this references the cleanup resources you can rely on it to determine the commits are made."
+}
