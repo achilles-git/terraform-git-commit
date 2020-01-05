@@ -6,9 +6,8 @@ branch=${2:-master}
 git fetch
 git rev-parse --verify ${branch}
 branch_exit_code=$?
-has_changes=$(git status -s)
 
-if [[ ! -z ${has_changes} ]]; then
+if [[ ! -z $(git status -s) ]]; then
     git stash
 fi
 
@@ -20,6 +19,6 @@ else
     git pull origin master --rebase
 fi
 
-if [[ ! -z ${has_changes} ]]; then
+if [[ ! -z $(git stash list) ]]; then
     git stash pop
 fi
