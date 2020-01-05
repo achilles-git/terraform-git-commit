@@ -10,7 +10,7 @@ We also support changing the base_url to the git remote. The default is `github.
 
 ```hcl
 module "repository" {
-  source           = "git::https://github.com/goci-io/git-terraform-commit.git?ref=tags/<latest-version>"
+  source           = "git::https://github.com/goci-io/terraform-git-commit.git?ref=tags/<latest-version>"
   git_repository   = "goci-repository-setup-example"
   git_organization = "goci-io"
   message          = "[goci] add initial README.md"
