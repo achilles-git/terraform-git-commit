@@ -4,7 +4,7 @@ cd ${1}
 branch=${2:-master}
 
 git fetch
-git rev-parse --verify ${branch}
+git rev-parse --verify origin/${branch}
 branch_exit_code=$?
 
 if [[ ! -z $(git status -s) ]]; then
@@ -13,10 +13,10 @@ fi
 
 if [[ ${branch_exit_code} -eq 0 ]]; then
     git checkout ${branch}
-    git pull origin ${branch} --rebase
+    git pull origin ${branch} --rebase -Xours
 else
     git checkout -b ${branch}
-    git pull origin master --rebase
+    git pull origin master --rebase -Xours
 fi
 
 if [[ ! -z $(git stash list) ]]; then
