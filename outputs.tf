@@ -3,6 +3,6 @@ output "content_hash" {
 }
 
 output "done_trigger" {
-  value       = join("", null_resource.cleanup.*.triggers.git_clone_trigger)
+  value       = join("", null_resource.cleanup.*.triggers.hash)
   description = "As this references the cleanup resources you can rely on it to determine the commits are made."
 }
