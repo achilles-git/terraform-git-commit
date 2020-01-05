@@ -20,6 +20,12 @@ variable "ssh_key_file" {
   description = "Path to the git SSH Key file"
 }
 
+variable "enabled" {
+  type        = bool
+  default     = true
+  description = "When not enabled no resources will be created or committed"
+}
+
 variable "paths" {
   type        = map(object({
     target = string

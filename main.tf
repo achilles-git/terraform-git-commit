@@ -8,6 +8,7 @@ locals {
 }
 
 resource "null_resource" "clone" {
+  count      = var.enabled ? 1 : 0
   depends_on = [var.commit_depends_on]
   
   provisioner "local-exec" {
@@ -21,13 +22,13 @@ resource "null_resource" "clone" {
 
 resource "local_file" "rendered" {
   depends_on = [null_resource.clone]
-  count      = length(local.file_source_keys)
+  count      = var.enabled ? length(local.file_source_keys) : 0
   filename   = format("%s/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target"))
   content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
 }
 
 resource "null_resource" "checkout" {
-  count      = var.branch == "master" ? 0 : 1
+  count      = var.branch == "master" || !var.enabled ? 0 : 1
   depends_on = [null_resource.clone]
 
   provisioner "local-exec" {
@@ -40,6 +41,7 @@ resource "null_resource" "checkout" {
 }
 
 resource "null_resource" "commits" {
+  count      = var.enabled ? 1 : 0
   depends_on = [
     local_file.rendered,
     null_resource.checkout,
@@ -55,6 +57,7 @@ resource "null_resource" "commits" {
 }
 
 resource "null_resource" "cleanup" {
+  count      = var.enabled ? 1 : 0
   depends_on = [
     null_resource.clone,
     null_resource.commits,
