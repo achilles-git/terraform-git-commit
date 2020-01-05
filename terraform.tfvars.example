@@ -1,0 +1,14 @@
+git_repository   = "goci-repository-setup-example"
+git_organization = "goci-io"
+ssh_key_path     = "~/.ssh/id_rsa"
+message          = "[goci] add initial README.md"
+branch           = "test-git-terraform-commits-module"
+changes          = false
+paths            = {
+  "example/README.md" = {
+    target = "README.md"
+    data   = {
+      example_var = "Example repository description"
+    }
+  }
+}
