@@ -14,7 +14,7 @@ variable "git_base_url" {
   description = "Base url to the git remote"
 }
 
-variable "ssh_key_path" {
+variable "ssh_key_file" {
   type        = string
   default     = "~/.ssh/git_rsa"
   description = "Path to the git SSH Key file"

@@ -9,7 +9,7 @@ locals {
 
 resource "null_resource" "clone" {
   provisioner "local-exec" {
-    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_path}"
+    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file}"
   }
 
   triggers = {
@@ -44,7 +44,7 @@ resource "null_resource" "commits" {
   ]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/commit.sh ${local.repository_dir} ${var.branch} '${var.message}' ${var.ssh_key_path}"
+    command = "${path.module}/scripts/commit.sh ${local.repository_dir} ${var.branch} '${var.message}' ${var.ssh_key_file}"
   }
 
   triggers = {
