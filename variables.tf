@@ -23,7 +23,7 @@ variable "ssh_key_path" {
 variable "paths" {
   type        = map(object({
     target = string
-    data   = map(any)
+    data   = any
   }))
   default     = {
     "." = { 
