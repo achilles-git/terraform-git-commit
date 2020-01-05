@@ -1,6 +1,6 @@
 git_repository   = "goci-repository-setup-example"
 git_organization = "goci-io"
-ssh_key_path     = "~/.ssh/id_rsa"
+ssh_key_file     = "~/.ssh/id_rsa"
 message          = "[goci] add initial README.md"
 branch           = "test-git-terraform-commits-module"
 changes          = false
