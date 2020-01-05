@@ -57,3 +57,8 @@ variable "templates_root_dir" {
   description = "The root directory to find template files. Defaults to current module directory"
 }
 
+variable "commit_depends_on" {
+  type        = list
+  default     = []
+  description = "Terraform resources to depend on before adding the commits"
+}
