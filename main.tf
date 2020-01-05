@@ -1,9 +1,10 @@
 locals {
-  git_clone_trigger = uuid()
-  file_source_keys  = keys(var.paths)
-  content_hash      = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
-  repository_remote = format("git@%s:%s/%s.git", var.git_base_url, var.git_organization, var.git_repository)
-  repository_dir    = format("%s/repository", path.module)
+  git_clone_trigger  = uuid()
+  file_source_keys   = keys(var.paths)
+  content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
+  templates_root_dir = var.templates_root_dir == "" ? abspath(path.module) : var.templates_root_dir
+  repository_remote  = format("git@%s:%s/%s.git", var.git_base_url, var.git_organization, var.git_repository)
+  repository_dir     = format("%s/repository", path.module)
 }
 
 resource "null_resource" "clone" {
@@ -20,7 +21,7 @@ resource "local_file" "rendered" {
   depends_on = [null_resource.clone]
   count      = length(local.file_source_keys)
   filename   = format("%s/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target"))
-  content    = templatefile(format("%s/%s", path.module, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
+  content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
 }
 
 resource "null_resource" "checkout" {

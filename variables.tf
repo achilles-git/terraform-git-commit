@@ -50,3 +50,10 @@ variable "changes" {
   default     = true
   description = "On changes a new branch can be opened containing the changes" 
 }
+
+variable "templates_root_dir" {
+  type        = string
+  default     = ""
+  description = "The root directory to find template files. Defaults to current module directory"
+}
+
