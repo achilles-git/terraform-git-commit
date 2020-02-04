@@ -14,6 +14,12 @@ variable "git_base_url" {
   description = "Base url to the git remote"
 }
 
+variable "git_user" {
+  type        = string
+  default     = "git"
+  description = "Username or username-password authentication"
+}
+
 variable "ssh_key_file" {
   type        = string
   default     = "~/.ssh/git_rsa"
