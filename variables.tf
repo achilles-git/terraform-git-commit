@@ -33,10 +33,7 @@ variable "enabled" {
 }
 
 variable "paths" {
-  type        = map(object({
-    target = string
-    data   = any
-  }))
+  type        = any
   default     = {
     "." = { 
       target = ".", 
