@@ -73,19 +73,3 @@ resource "null_resource" "commits" {
     content_hash = local.content_hash
   }
 }
-
-resource "null_resource" "cleanup" {
-  count      = var.enabled ? 1 : 0
-  depends_on = [
-    null_resource.clone,
-    null_resource.commits,
-  ]
-
-  provisioner "local-exec" {
-    command = "rm -rf ${local.repository_dir}"
-  }
-
-  triggers = {
-    hash = local.git_clone_trigger
-  }
-}
