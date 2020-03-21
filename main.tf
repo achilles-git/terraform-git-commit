@@ -7,12 +7,25 @@ locals {
   repository_dir     = format("%s/repository", path.module)
 }
 
-resource "null_resource" "clone" {
+resource "null_resource" "init" {
   count      = var.enabled ? 1 : 0
   depends_on = [var.commit_depends_on]
   
   provisioner "local-exec" {
-    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file} ${var.git_base_url}"
+    command = "${path.module}/scripts/init.sh ${var.git_base_url}"
+  }
+
+  triggers = {
+    hash = local.git_clone_trigger
+  }
+}
+
+resource "null_resource" "clone" {
+  count      = var.enabled ? 1 : 0
+  depends_on = [null_resource.init]
+  
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file}"
   }
 
   triggers = {
