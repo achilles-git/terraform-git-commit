@@ -1,10 +1,9 @@
 locals {
   file_source_keys   = keys(var.paths)
-  git_clone_trigger  = var.changes ? uuid() : 1
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
-  templates_root_dir = var.templates_root_dir == "" ? abspath(path.module) : var.templates_root_dir
+  templates_root_dir = var.templates_root_dir == "" ? path.module : var.templates_root_dir
   repository_remote  = format("%s@%s:%s/%s.git", var.git_user, var.git_base_url, var.git_organization, var.git_repository)
-  repository_dir     = format("/conf/git/checkout/%s", random_string.temp_repo_dir.result)
+  repository_dir     = format("/conf/git/checkout/%s/repository", random_string.temp_repo_dir.result)
 }
 
 resource "random_string" "temp_repo_dir" {
@@ -12,32 +11,26 @@ resource "random_string" "temp_repo_dir" {
   special = false
 }
 
-resource "null_resource" "checkout" {
-  count      = var.branch == "master" || !var.enabled ? 0 : 1
-  depends_on = [var.commit_depends_on]
-
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/checkout.sh ${var.git_base_url} ${local.repository_remote} ${local.repository_dir} ${var.branch} ${var.ssh_key_file} ${var.git_user}"
-  }
-
-  triggers = {
-    hash = local.git_clone_trigger
-  }
-}
-
 resource "local_file" "rendered" {
-  depends_on = [null_resource.checkout]
   count      = var.enabled ? length(local.file_source_keys) : 0
-  filename   = format("%s/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target"))
+  filename   = abspath(format("%s/../changes/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target")))
   content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
 }
 
-resource "null_resource" "commits" {
+resource "null_resource" "commit" {
   count      = var.enabled ? 1 : 0
-  depends_on = [local_file.rendered]
+  depends_on = [var.commit_depends_on, local_file.rendered]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/commit.sh ${local.repository_dir} ${var.branch} '${var.message}' ${var.ssh_key_file}"
+    command = "${path.module}/scripts/commit.sh ${join(" ", [
+      var.git_base_url,
+      var.git_user,
+      var.ssh_key_file,
+      local.repository_remote,
+      local.repository_dir,
+      var.branch,
+      "'${var.message}'"
+    ])}"
   }
 
   triggers = {
