@@ -38,13 +38,6 @@ resource "null_resource" "clone" {
   }
 }
 
-resource "local_file" "rendered" {
-  depends_on = [null_resource.clone]
-  count      = var.enabled ? length(local.file_source_keys) : 0
-  filename   = format("%s/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target"))
-  content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
-}
-
 resource "null_resource" "checkout" {
   count      = var.branch == "master" || !var.enabled ? 0 : 1
   depends_on = [null_resource.clone]
@@ -58,12 +51,16 @@ resource "null_resource" "checkout" {
   }
 }
 
+resource "local_file" "rendered" {
+  depends_on = [null_resource.checkout]
+  count      = var.enabled ? length(local.file_source_keys) : 0
+  filename   = format("%s/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target"))
+  content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
+}
+
 resource "null_resource" "commits" {
   count      = var.enabled ? 1 : 0
-  depends_on = [
-    local_file.rendered,
-    null_resource.checkout,
-  ]
+  depends_on = [local_file.rendered]
 
   provisioner "local-exec" {
     command = "${path.module}/scripts/commit.sh ${local.repository_dir} ${var.branch} '${var.message}' ${var.ssh_key_file}"
