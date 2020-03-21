@@ -1,21 +1,27 @@
 #!/bin/sh
 set -e
 
+branch=${4:-master}
+ssh_key_file=${5}
+repository_dir=${3}
+git_user=${6:-git}
+git_host=${1:-github.com}
+git_remote=${2}
+
 git config --global user.email "bot@goci.io"
-git config --global user.name "$5"
+git config --global user.name "$git_user"
 
 mkdir -p ~/.ssh
-ssh-keyscan ${1} >> ~/.ssh/known_hosts
+ssh-keyscan ${git_host} >> ~/.ssh/known_hosts
 
-branch=${3:-master}
-export GIT_SSH_COMMAND="ssh -i ${4}"
+export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
-if [[ ! -d ${2} ]]; then
-    git clone ${1} ${2}
+if [[ ! -d ${repository_dir} ]]; then
+    git clone ${git_remote} ${repository_dir}
 fi
 
 if [[ "$branch" != "master" ]]; then
-    cd ${2}
+    cd ${repository_dir}
     git fetch
 
     set +e

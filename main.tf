@@ -17,7 +17,7 @@ resource "null_resource" "checkout" {
   depends_on = [var.commit_depends_on]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/checkout.sh ${local.repository_remote} ${local.repository_dir} ${var.branch} ${var.ssh_key_file} ${var.git_user}"
+    command = "${path.module}/scripts/checkout.sh ${var.git_base_url} ${local.repository_remote} ${local.repository_dir} ${var.branch} ${var.ssh_key_file} ${var.git_user}"
   }
 
   triggers = {
