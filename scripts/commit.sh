@@ -18,7 +18,8 @@ ssh-keyscan ${git_host} >> ~/.ssh/known_hosts
 export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
 if [[ ! -d ${repository_dir} ]]; then
-    git clone ${repository_remote} ${repository_dir}
+    git clone ${repository_remote} ${repository_dir} --depth 1
+    cd ${repository_dir}
     git checkout ${branch}
 else
     cd ${repository_dir}
