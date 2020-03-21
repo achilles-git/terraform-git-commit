@@ -1,11 +1,15 @@
 #!/bin/sh
+set -e
 
 cd ${1}
 branch=${2:-master}
 
 GIT_SSH_COMMAND="ssh -i ${3}" git fetch
+
+set +e
 git rev-parse --verify origin/${branch}
 branch_exit_code=$?
+set -e
 
 if [[ ! -z $(git status -s) ]]; then
     git stash
