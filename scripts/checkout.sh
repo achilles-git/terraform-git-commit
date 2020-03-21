@@ -3,7 +3,7 @@
 cd ${1}
 branch=${2:-master}
 
-git fetch
+GIT_SSH_COMMAND="ssh -i ${3}" git fetch
 git rev-parse --verify origin/${branch}
 branch_exit_code=$?
 

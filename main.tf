@@ -4,7 +4,7 @@ locals {
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? abspath(path.module) : var.templates_root_dir
   repository_remote  = format("%s@%s:%s/%s.git", var.git_user, var.git_base_url, var.git_organization, var.git_repository)
-  repository_dir     = abspath(format("%s/%s", path.module, random_string.temp_repo_dir.result))
+  repository_dir     = format("/conf/git/checkout/%s", random_string.temp_repo_dir.result)
 }
 
 resource "random_string" "temp_repo_dir" {
@@ -50,7 +50,7 @@ resource "null_resource" "checkout" {
   depends_on = [null_resource.clone]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/checkout.sh ${local.repository_dir} ${var.branch}"
+    command = "${path.module}/scripts/checkout.sh ${local.repository_dir} ${var.branch} ${var.ssh_key_file}"
   }
 
   triggers = {
