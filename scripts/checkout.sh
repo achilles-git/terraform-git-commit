@@ -5,7 +5,7 @@ git config --global user.email "bot@goci.io"
 git config --global user.name "$5"
 
 mkdir -p ~/.ssh
-ssh-keyscan ${2} >> ~/.ssh/known_hosts
+ssh-keyscan ${1} >> ~/.ssh/known_hosts
 
 branch=${3:-master}
 export GIT_SSH_COMMAND="ssh -i ${4}"
