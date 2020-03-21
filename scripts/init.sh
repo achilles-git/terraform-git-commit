@@ -1,7 +1,7 @@
 #!/bin/sh
 
 git config --global user.email "bot@goci.io"
-git config --global user.name "goci.io"
+git config --global user.name "$1"
 
 mkdir -p ~/.ssh
-ssh-keyscan ${4} >> ~/.ssh/known_hosts
+ssh-keyscan ${2} >> ~/.ssh/known_hosts

@@ -12,7 +12,7 @@ resource "null_resource" "init" {
   depends_on = [var.commit_depends_on]
   
   provisioner "local-exec" {
-    command = "${path.module}/scripts/init.sh ${var.git_base_url}"
+    command = "${path.module}/scripts/init.sh ${var.git_user} ${var.git_base_url}"
   }
 
   triggers = {
