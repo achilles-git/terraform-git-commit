@@ -12,38 +12,12 @@ resource "random_string" "temp_repo_dir" {
   special = false
 }
 
-resource "null_resource" "init" {
-  count      = var.enabled ? 1 : 0
-  depends_on = [var.commit_depends_on]
-  
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/init.sh ${var.git_user} ${var.git_base_url}"
-  }
-
-  triggers = {
-    hash = local.git_clone_trigger
-  }
-}
-
-resource "null_resource" "clone" {
-  count      = var.enabled ? 1 : 0
-  depends_on = [null_resource.init]
-  
-  provisioner "local-exec" {
-    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file}"
-  }
-
-  triggers = {
-    hash = local.git_clone_trigger
-  }
-}
-
 resource "null_resource" "checkout" {
   count      = var.branch == "master" || !var.enabled ? 0 : 1
-  depends_on = [null_resource.clone]
+  depends_on = [var.commit_depends_on]
 
   provisioner "local-exec" {
-    command = "${path.module}/scripts/checkout.sh ${local.repository_dir} ${var.branch} ${var.ssh_key_file}"
+    command = "${path.module}/scripts/checkout.sh ${local.repository_remote} ${local.repository_dir} ${var.branch} ${var.ssh_key_file}"
   }
 
   triggers = {

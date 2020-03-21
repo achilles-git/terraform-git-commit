@@ -1,28 +1,41 @@
 #!/bin/sh
 set -e
 
-cd ${1}
-branch=${2:-master}
+git config --global user.email "bot@goci.io"
+git config --global user.name "$5"
 
-GIT_SSH_COMMAND="ssh -i ${3}" git fetch
+mkdir -p ~/.ssh
+ssh-keyscan ${2} >> ~/.ssh/known_hosts
 
-set +e
-git rev-parse --verify origin/${branch}
-branch_exit_code=$?
-set -e
+branch=${3:-master}
+export GIT_SSH_COMMAND="ssh -i ${4}"
 
-if [[ ! -z $(git status -s) ]]; then
-    git stash
+if [[ ! -d ${2} ]]; then
+    git clone ${1} ${2}
 fi
 
-if [[ ${branch_exit_code} -eq 0 ]]; then
-    git checkout ${branch}
-    git pull origin ${branch} --rebase -Xours
-else
-    git checkout -b ${branch}
-    git pull origin master --rebase -Xours
-fi
+if [[ "$branch" != "master" ]]; then
+    cd ${2}
+    git fetch
 
-if [[ ! -z $(git stash list) ]]; then
-    git stash pop
+    set +e
+    git rev-parse --verify origin/${branch}
+    branch_exit_code=$?
+    set -e
+
+    if [[ ! -z $(git status -s) ]]; then
+        git stash
+    fi
+
+    if [[ ${branch_exit_code} -eq 0 ]]; then
+        git checkout ${branch}
+        git pull origin ${branch} --rebase -Xours
+    else
+        git checkout -b ${branch}
+        git pull origin master --rebase -Xours
+    fi
+
+    if [[ ! -z $(git stash list) ]]; then
+        git stash pop
+    fi
 fi
