@@ -12,7 +12,7 @@ resource "null_resource" "clone" {
   depends_on = [var.commit_depends_on]
   
   provisioner "local-exec" {
-    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file}"
+    command = "${path.module}/scripts/clone.sh ${local.repository_remote} ${local.repository_dir} ${var.ssh_key_file} ${var.git_base_url}"
   }
 
   triggers = {
