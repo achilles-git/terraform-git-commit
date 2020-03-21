@@ -6,6 +6,8 @@ This module creates git commits using Terraforms `local_file` and `null_resource
 To connect to the git repository a SSH-Key is required. The path to the key file can be specified using `ssh_key_file`.
 We also support changing the base_url to the git remote. The default is `github.com`.
 
+You can use the [github-repository](https://github.com/goci-io/github-repository) module for example to setup a complete repository including an SSH deploy key.
+
 ### Usage
 
 ```hcl
