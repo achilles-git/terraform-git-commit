@@ -70,6 +70,6 @@ resource "null_resource" "commits" {
   }
 
   triggers = {
-    content_hash = local.content_hash
+    hash = local.content_hash
   }
 }
