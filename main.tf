@@ -4,7 +4,12 @@ locals {
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? abspath(path.module) : var.templates_root_dir
   repository_remote  = format("%s@%s:%s/%s.git", var.git_user, var.git_base_url, var.git_organization, var.git_repository)
-  repository_dir     = format("%s/repository", path.module)
+  repository_dir     = format("%s/%s", path.module, random_string.temp_repo_dir.result)
+}
+
+resource "random_string" "temp_repo_dir" {
+  length  = 21
+  special = false
 }
 
 resource "null_resource" "init" {
