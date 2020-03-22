@@ -42,7 +42,7 @@ if [[ ${remote_branch_exit_code} -eq 0 ]]; then
 fi
 
 mkdir -p ../changes
-cp -R ../changes/* ./
+cp -R '../changes/*' ./
 
 if [[ -z $(git status -s) ]]; then
     echo "No changes required on $branch."
