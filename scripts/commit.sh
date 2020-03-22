@@ -41,14 +41,17 @@ if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     git pull origin ${branch} --rebase -Xours
 fi
 
-mkdir -p ../changes
-cp -R '../changes/*' ./
+if [[ -d ${repository_dir}/../changes ]]; then
+    cp -R ${repository_dir}/../changes/ .
 
-if [[ -z $(git status -s) ]]; then
-    echo "No changes required on $branch."
-    exit 0
+    if [[ -z $(git status -s) ]]; then
+        echo "No changes required on $branch."
+    else 
+        git add .
+        git commit -m "$commit_msg"
+        git push origin ${branch}
+    fi
+else
+    echo "No changes found in ${repository_dir}/../changes directory".
+    echo "Nothing to commit."
 fi
-
-git add .
-git commit -m "$commit_msg"
-git push origin ${branch}
