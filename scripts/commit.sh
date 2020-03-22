@@ -29,10 +29,6 @@ git rev-parse --verify ${branch}
 branch_exit_code=$?
 set -e
 
-if [[ ! -z $(git status -s) ]]; then
-    git stash
-fi
-
 if [[ ${branch_exit_code} -eq 0 ]]; then
     git checkout ${branch}
 else
@@ -40,9 +36,6 @@ else
 fi
 
 git pull origin ${branch} --rebase -Xours
-if [[ ! -z $(git stash list) ]]; then
-    git stash pop
-fi
 
 mkdir -p ../changes
 cp -R ../changes/* ./
