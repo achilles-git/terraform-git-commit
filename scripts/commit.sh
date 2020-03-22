@@ -25,7 +25,7 @@ cd ${repository_dir}
 git fetch
 
 set +e
-git rev-parse --verify origin/${branch}
+git rev-parse --verify ${branch}
 branch_exit_code=$?
 set -e
 
