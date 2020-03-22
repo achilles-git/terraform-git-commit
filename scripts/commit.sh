@@ -27,6 +27,8 @@ git fetch
 set +e
 git rev-parse --verify ${branch}
 branch_exit_code=$?
+git rev-parse --verify origin/${branch}
+remote_branch_exit_code=$?
 set -e
 
 if [[ ${branch_exit_code} -eq 0 ]]; then
@@ -35,7 +37,9 @@ else
     git checkout -b ${branch}
 fi
 
-git pull origin ${branch} --rebase -Xours
+if [[ ${remote_branch_exit_code} -eq 0 ]]; then
+    git pull origin ${branch} --rebase -Xours
+fi
 
 mkdir -p ../changes
 cp -R ../changes/* ./
