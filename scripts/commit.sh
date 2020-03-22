@@ -35,17 +35,17 @@ fi
 
 if [[ ${branch_exit_code} -eq 0 ]]; then
     git checkout ${branch}
-    git pull origin ${branch} --rebase -Xours
 else
     git checkout -b ${branch}
-    git pull origin master --rebase -Xours
 fi
 
+git pull origin ${branch} --rebase -Xours
 if [[ ! -z $(git stash list) ]]; then
     git stash pop
 fi
 
-cp -R ../changes/ ./
+mkdir -p ../changes
+cp -R ../changes/* ./
 
 if [[ -z $(git status -s) ]]; then
     echo "No changes required on $branch."
