@@ -42,7 +42,7 @@ if [[ ${remote_branch_exit_code} -eq 0 ]]; then
 fi
 
 if [[ -d ${repository_dir}/../changes ]]; then
-    cp -R ${repository_dir}/../changes/ .
+    cp -R ${repository_dir}/../changes/* .
 
     if [[ -z $(git status -s) ]]; then
         echo "No changes required on $branch."
