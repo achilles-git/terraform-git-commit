@@ -20,14 +20,11 @@ export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
 if [[ ! -d ${repository_dir} ]]; then
     mkdir -p ${repository_dir}
-    cd ${repository_dir}
-
-    git init
-    git remote add origin ${repository_remote}
+    git clone ${repository_remote} ${repository_dir} --depth 1 --no-tags
 fi
 
 cd ${repository_dir}
-git fetch origin
+git fetch origin -n
 
 set +e
 git rev-parse --verify ${branch}
