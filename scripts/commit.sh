@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
 git_host=${1:-github.com}
@@ -18,6 +18,7 @@ ssh-keyscan ${git_host} >> ~/.ssh/known_hosts
 export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
 if [[ ! -d ${repository_dir} ]]; then
+    mkdir -p ${repository_dir}
     git clone ${repository_remote} ${repository_dir} --depth 1
 fi
 
