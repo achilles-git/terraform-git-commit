@@ -2,8 +2,8 @@ locals {
   file_source_keys   = keys(var.paths)
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? path.module : var.templates_root_dir
+  repository_dir     = format("%s/%s/repository", var.repository_checkout_dir, random_string.temp_repo_dir.result)
   repository_remote  = format("%s@%s:%s/%s.git", var.git_user, var.git_base_url, var.git_organization, var.git_repository)
-  repository_dir     = format("/conf/git/checkout/%s/repository", random_string.temp_repo_dir.result)
 }
 
 resource "random_string" "temp_repo_dir" {

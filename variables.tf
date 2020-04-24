@@ -60,6 +60,13 @@ variable "changes" {
   description = "On changes a new branch can be opened containing the changes" 
 }
 
+variable "repository_checkout_dir" {
+  type        = string
+  default     = "/conf/git/checkout"
+  description = "Path to directory to checkout git repository"
+}
+
+
 variable "templates_root_dir" {
   type        = string
   default     = ""
