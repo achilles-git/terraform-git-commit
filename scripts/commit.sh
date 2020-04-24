@@ -33,12 +33,15 @@ remote_branch_exit_code=$?
 set -e
 
 if [[ ${branch_exit_code} -eq 0 ]]; then
+    echo "Checking out existing local branch ${branch}"
     git checkout ${branch}
 else
+    echo "Creating new local branch ${branch}"
     git checkout -b ${branch}
 fi
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
+    echo "Update local branch with origin"
     git pull origin ${branch} --rebase -Xours
 fi
 
