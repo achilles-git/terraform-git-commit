@@ -2,6 +2,8 @@
 
 **Maintained by [@goci-io/prp-terraform](https://github.com/orgs/goci-io/teams/prp-terraform)**
 
+![Terraform Validate](https://github.com/goci-io/terraform-git-commit/workflows/Terraform%20Validate/badge.svg)
+
 This module creates git commits using Terraforms `local_file` and `null_resource`. 
 To connect to the git repository a SSH-Key is required. The path to the key file can be specified using `ssh_key_file`.
 We also support changing the base_url to the git remote. The default is `github.com`.
