@@ -6,8 +6,9 @@ git_user=${2:-git}
 ssh_key_file=${3}
 repository_remote=${4}
 repository_dir=${5}
-branch=${6:-master}
-commit_msg=${7}
+changes_dir=${6}
+branch=${7:-master}
+commit_msg=${8}
 
 git config --global user.email "bot@goci.io"
 git config --global user.name "$git_user"
@@ -48,8 +49,8 @@ if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     git pull origin ${branch} --rebase -Xours
 fi
 
-if [[ -d ${repository_dir}/../changes ]]; then
-    cp -R "${repository_dir}/../changes"/* .
+if [[ -d ${changes_dir} ]]; then
+    cp -R "$changes_dir"/* .
 
     if [[ -z $(git status -s) ]]; then
         echo "No changes required on $branch."
@@ -59,6 +60,6 @@ if [[ -d ${repository_dir}/../changes ]]; then
         git push origin ${branch}
     fi
 else
-    echo "No changes found in ${repository_dir}/../changes directory".
+    echo "No changes found in ${changes_dir} directory".
     echo "Nothing to commit."
 fi

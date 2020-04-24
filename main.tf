@@ -1,5 +1,6 @@
 locals {
   file_source_keys   = keys(var.paths)
+  changes_dir        = abspath(format("%s/../changes", local.repository_dir))
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? path.module : var.templates_root_dir
   repository_dir     = format("%s/%s/repository", var.repository_checkout_dir, random_string.temp_repo_dir.result)
@@ -13,7 +14,7 @@ resource "random_string" "temp_repo_dir" {
 
 resource "local_file" "rendered" {
   count      = var.enabled ? length(local.file_source_keys) : 0
-  filename   = abspath(format("%s/../changes/%s", local.repository_dir, lookup(var.paths[local.file_source_keys[count.index]], "target")))
+  filename   = abspath(format("%s/%s", local.changes_dir, lookup(var.paths[local.file_source_keys[count.index]], "target")))
   content    = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
 }
 
@@ -28,6 +29,7 @@ resource "null_resource" "commit" {
       var.ssh_key_file,
       local.repository_remote,
       local.repository_dir,
+      local.changes_dir,
       var.branch,
       "'${var.message}'"
     ])}"
