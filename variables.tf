@@ -33,10 +33,10 @@ variable "enabled" {
 }
 
 variable "paths" {
-  type        = any
-  default     = {
-    "." = { 
-      target = ".", 
+  type = any
+  default = {
+    "." = {
+      target = ".",
       data   = {}
     }
   }
@@ -57,7 +57,7 @@ variable "branch" {
 variable "changes" {
   type        = bool
   default     = true
-  description = "On changes a new branch can be opened containing the changes" 
+  description = "On changes a new branch can be opened containing the changes"
 }
 
 variable "repository_checkout_dir" {
