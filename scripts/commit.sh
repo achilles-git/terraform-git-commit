@@ -20,7 +20,7 @@ export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
 if [[ ! -d ${repository_dir} ]]; then
     mkdir -p ${repository_dir}
-    git clone ${repository_remote} ${repository_dir} --depth 1 --no-tags
+    git clone ${repository_remote} ${repository_dir} --depth 1 --no-tags --no-single-branch
 fi
 
 cd ${repository_dir}
