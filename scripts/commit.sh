@@ -43,7 +43,7 @@ fi
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     echo "Update local branch with origin"
-    git pull origin ${branch} -Xours -s recursive --autostash
+    git pull origin ${branch} -Xours -s recursive
 fi
 
 if [[ -d ${changes_dir} ]]; then
