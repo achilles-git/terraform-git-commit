@@ -43,10 +43,7 @@ fi
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     echo "Update local branch with origin"
-    git pull origin ${branch} --rebase -Xours
-else
-    echo "Update local branch with origin/master"
-    git pull origin master --rebase -Xours
+    git pull origin ${branch} -Xours -s recursive --autostash
 fi
 
 if [[ -d ${changes_dir} ]]; then
