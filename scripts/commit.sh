@@ -24,7 +24,7 @@ if [[ ! -d ${repository_dir} ]]; then
 fi
 
 cd ${repository_dir}
-git fetch origin -n
+git fetch origin
 
 set +e
 git rev-parse --verify ${branch}
