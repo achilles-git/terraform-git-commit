@@ -44,16 +44,19 @@ fi
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     echo "Update local branch with origin"
     git pull origin ${branch} --rebase -Xours
+else
+    echo "Update local branch with origin/master"
+    git pull origin master --rebase -Xours
 fi
 
 if [[ -d ${changes_dir} ]]; then
     cp -R ${changes_dir}/. .
 
-    if [[ -z $(git status -s) ]]; then
+    if [[ -z "$(git status -s)" ]]; then
         echo "No changes required on $branch."
     else 
         git add .
-        git commit -m "$commit_msg"
+        git commit -m "$commit_msg" --allow-empty
         git push origin ${branch}
     fi
 else
