@@ -20,7 +20,7 @@ export GIT_SSH_COMMAND="ssh -i ${ssh_key_file}"
 
 if [[ ! -d ${repository_dir} ]]; then
     mkdir -p ${repository_dir}
-    git clone ${repository_remote} ${repository_dir} --depth 1 --no-tags --no-single-branch
+    git clone ${repository_remote} ${repository_dir} --no-tags --no-single-branch
 fi
 
 cd ${repository_dir}
@@ -43,7 +43,7 @@ fi
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     echo "Update local branch with origin"
-    git pull origin ${branch} -Xours -s recursive
+    git pull origin ${branch} -Xours
 fi
 
 if [[ -d ${changes_dir} ]]; then
