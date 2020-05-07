@@ -42,8 +42,10 @@ else
 fi
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
-    echo "Update local branch with origin"
-    git pull origin ${branch} -Xours
+    echo "Trying to update local branch with origin"
+    set +e
+    git pull origin ${branch} -Xours -q
+    set -e
 fi
 
 if [[ -d ${changes_dir} ]]; then
