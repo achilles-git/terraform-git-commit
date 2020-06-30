@@ -1,5 +1,6 @@
 locals {
   file_source_keys   = keys(var.paths)
+  enabled            = var.enabled && length(var.paths) > 0
   changes_dir        = abspath(format("%s/../changes", local.repository_dir))
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? path.module : var.templates_root_dir
@@ -13,13 +14,13 @@ resource "random_string" "temp_repo_dir" {
 }
 
 resource "local_file" "rendered" {
-  count    = var.enabled ? length(local.file_source_keys) : 0
+  count    = local.enabled ? length(var.paths) : 0
   filename = abspath(format("%s/%s", local.changes_dir, lookup(var.paths[local.file_source_keys[count.index]], "target")))
   content  = templatefile(format("%s/%s", local.templates_root_dir, element(local.file_source_keys, count.index)), lookup(var.paths[local.file_source_keys[count.index]], "data"))
 }
 
 resource "null_resource" "commit" {
-  count      = var.enabled ? 1 : 0
+  count      = local.enabled ? 1 : 0
   depends_on = [var.commit_depends_on, local_file.rendered]
 
   provisioner "local-exec" {
