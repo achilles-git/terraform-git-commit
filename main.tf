@@ -1,6 +1,6 @@
 locals {
   file_source_keys   = keys(var.paths)
-  enabled            = var.enabled && length(var.paths)
+  enabled            = var.enabled && length(var.paths) > 0
   changes_dir        = abspath(format("%s/../changes", local.repository_dir))
   content_hash       = var.changes ? md5(join("\n", local_file.rendered.*.content)) : 1
   templates_root_dir = var.templates_root_dir == "" ? path.module : var.templates_root_dir
