@@ -8,7 +8,8 @@ repository_remote=${4}
 repository_dir=${5}
 changes_dir=${6}
 branch=${7:-master}
-commit_msg=${8}
+source_branch=${8}
+commit_msg=${9}
 
 git config --global user.email "bot@goci.io"
 git config --global user.name "$git_user"
@@ -27,19 +28,16 @@ cd ${repository_dir}
 git fetch origin
 
 set +e
-git rev-parse --verify ${branch}
-branch_exit_code=$?
 git rev-parse --verify origin/${branch}
 remote_branch_exit_code=$?
 set -e
 
-if [[ ${branch_exit_code} -eq 0 ]]; then
-    echo "Checking out existing local branch ${branch}"
-    git checkout ${branch}
-else
-    echo "Creating new local branch ${branch}"
-    git checkout -b ${branch}
-fi
+echo "Checking out existing source branch ${source_branch}"
+git checkout ${source_branch}
+
+echo "Creating new local branch ${branch}"
+git checkout -b ${branch}
+
 
 if [[ ${remote_branch_exit_code} -eq 0 ]]; then
     echo "Trying to update local branch with origin"
