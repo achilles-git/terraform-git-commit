@@ -54,6 +54,12 @@ variable "branch" {
   description = "The branch to commit and push the changes to"
 }
 
+variable "source_branch" {
+  type        = string
+  default     = "dev"
+  description = "The branch to create a new branch from"
+}
+
 variable "changes" {
   type        = bool
   default     = true
