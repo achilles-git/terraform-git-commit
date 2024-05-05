@@ -32,6 +32,7 @@ resource "null_resource" "commit" {
       local.repository_dir,
       local.changes_dir,
       var.branch,
+      var.source_branch,
       "'${var.message}'"
     ])}"
   }
